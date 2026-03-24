@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Journal</title>
+</head>
+<body>
+<h1>Journal Entry</h1>
+<input id="title" placeholder="Title"/>
+<input id="desc" placeholder="Description"/>
+<button onclick="addEntry()">Add Entry</button>
+
+<hr>
+<ul id="entries"></ul>
+<script>
+    const API_URL = "http://localhost:8000/app/entries/";
+    window.onload = function() {
+    fetchJournalEntries();
+    };
+
+    async function fetchJournalEntries() {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+
+    const list = document.getElementById("entries");
+    list.innerHTML = "";
+
+    data.forEach(entry => {
+    const li = document.createElement("li");
+    li.innerText = entry.title + " - " + entry.description;
+    list.appendChild(li);
+    });
+    }
+
+    async function addEntry() {
+    const title = document.getElementById("title").value;
+    const description = document.getElementById("desc").value;
+
+    await fetch(API_URL, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({title, description})
+    });
+
+    fetchJournalEntries();
+    }
+    fetchJournalEntries();
+
+</script>
+</body>
+</html>
