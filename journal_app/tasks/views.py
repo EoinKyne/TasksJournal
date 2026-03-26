@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http.response import JsonResponse
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 
@@ -14,3 +15,7 @@ class JournalEntryViewSet(viewsets.ModelViewSet):
 
 def home(request):
     return render(request, 'tasks/index.html')
+
+
+def health(request):
+    return JsonResponse({"status": "ok"})

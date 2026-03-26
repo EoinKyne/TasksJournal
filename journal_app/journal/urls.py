@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from tasks.views import JournalEntryViewSet, home
+from tasks.views import JournalEntryViewSet, home, health
 
 router = DefaultRouter()
 router.register(r'entries', JournalEntryViewSet)
@@ -27,5 +27,6 @@ router.register(r'entries', JournalEntryViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home),
-    path('app/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('health/', health)
 ]
