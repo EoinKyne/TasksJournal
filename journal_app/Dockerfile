@@ -10,6 +10,8 @@ COPY . .
 
 WORKDIR /app/journal_app
 
+RUN python manage.py collectstatic --noinput
+
 EXPOSE 8000
 
 CMD ["gunicorn", "journal.wsgi:application", "--bind", "0.0.0.0:8000"]

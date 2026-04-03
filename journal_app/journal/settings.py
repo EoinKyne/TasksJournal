@@ -29,7 +29,11 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "0") == "1"
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "/api/", "/api/entries"]
+ALLOWED_HOSTS = ["journal-app",
+                 "journal-app-web",
+                 "journal-app.default.svc.cluster.local",
+                 "journal-app-web.default.svc.cluster.local",
+                 "app.local"]
 
 
 # Application definition

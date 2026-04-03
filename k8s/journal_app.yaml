@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: journal-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: journal-app
+  template:
+    metadata:
+      labels:
+        app: journal-app
+    spec:
+      volumes:
+        - name: static-files
+          emptyDir: {}
+
+      initContainers:
+        - name: migrate
+          image: journal-app:latest
+          imagePullPolicy: Never
+          command: ["python", "manage.py", "migrate"]
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+
+      containers:
+        - name: journal-app
+          image: journal-app:latest
+          imagePullPolicy: Never
+          command: ["gunicorn"]
+          args:
+            ["journal.wsgi:application", "--bind", "0.0.0.0:8000"]
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          volumeMounts:
+            - name: static-files
+              mountPath: /app/staticfiles/
