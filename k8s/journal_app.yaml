@@ -44,3 +44,10 @@ spec:
           volumeMounts:
             - name: static-files
               mountPath: /app/staticfiles/
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
