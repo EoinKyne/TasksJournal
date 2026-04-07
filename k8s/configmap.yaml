@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  DEBUG: "0"
+  ALLOWED_HOSTS: "app.local"
+  DB_HOST: journal-app-data
+  DB_PORT: "5432"

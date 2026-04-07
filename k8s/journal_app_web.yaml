@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: journal-app-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: journal-app-web
+  template:
+    metadata:
+      labels:
+        app: journal-app-web
+    spec:
+      volumes:
+        - name: static-files
+          emptyDir: {}
+        - name: nginx-config
+          configMap:
+            name: nginx-config
+      initContainers:
+          - name: copy-static
+            image: journal-app:latest
+            imagePullPolicy: Never
+            command: [ "sh", "-c", "cp -r /app/staticfiles/* /static-files/" ]
+            volumeMounts:
+              - name: static-files
+                mountPath: /static-files
+      containers:
+        - name: journal-app-web
+          image: journal-app-web:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: static-files
+              mountPath: /app/staticfiles/
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
