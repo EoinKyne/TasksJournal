@@ -42,6 +42,8 @@ module "journal_app_data" {
     storage_env_name = each.value.storage_env_name
     storage_env_value = each.value.storage_env_value
     storage_class_name = each.value.storage_class_name
+    readiness_probe_initial_delay_seconds = each.value.readiness_probe_initial_delay_seconds
+    readiness_probe_period_seconds = each.value.readiness_probe_period_seconds
 }
 
 

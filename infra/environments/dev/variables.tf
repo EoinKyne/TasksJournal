@@ -46,7 +46,10 @@ variable "apps_database" {
     storage_env_name = string
     storage_env_value = string
     storage_class_name = string
-  }))
+
+    readiness_probe_initial_delay_seconds = number
+    readiness_probe_period_seconds = number
+    }))
 }
 
 variable "apps" {

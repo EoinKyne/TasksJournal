@@ -80,3 +80,11 @@ variable "storage_class_name" {
   description = "The name of the StorageClass for the PersistentVolumeClaim"
   type        = string
 }
+variable "readiness_probe_initial_delay_seconds" {
+  description = "The initial delay in seconds before the readiness probe is initiated"
+  type        = number
+}
+variable "readiness_probe_period_seconds" {
+  description = "The period in seconds between readiness probe checks"
+  type        = number
+}
