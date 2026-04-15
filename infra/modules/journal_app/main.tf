@@ -1,6 +1,7 @@
 resource "kubernetes_deployment_v1" "journal_app" {
   metadata {
     name      = var.app_name
+    namespace = var.namespace
     labels = {
       app = var.app_name
     }
@@ -65,13 +66,14 @@ resource "kubernetes_deployment_v1" "journal_app" {
 
           command = ["sh", "-c"]
           args = [<<EOT
-             until pg_isready -h journal-app-data -p 5432 -U "$POSTGRES_USER"; do
+             set -x
+             until pg_isready -h journal-app-data-headless -p 5432 -U "$POSTGRES_USER"; do
                echo 'Waiting for Postgres...'
                sleep 2
              done
 
              echo 'Postgres ready, running migrations...'
-             python manage.py migrate &&
+             python manage.py migrate || exit 1
 
              echo 'Starting Gunicorn...'
              gunicorn journal.wsgi:application --bind 0.0.0.0:8000
@@ -150,6 +152,36 @@ resource "kubernetes_service_v1" "journal_app" {
     port {
       port        = var.container_port
       target_port = var.container_port
+    }
+  }
+}
+
+resource "kubernetes_horizontal_pod_autoscaler_v2" "app_hpa" {
+  metadata {
+    name      = var.service_name
+    namespace = var.namespace
+  }
+
+  spec {
+    scale_target_ref {
+      kind = var.target_ref_kind
+      name = var.app_name
+      api_version = var.target_ref_api_version
+    }
+
+    min_replicas = var.min_replicas
+    max_replicas = var.max_replicas
+
+    metric {
+      type = var.metric_type
+
+      resource {
+        name = var.resource_target_name
+        target {
+          type = var.resource_target_type
+          average_utilization = var.resource_target_cpu_utilization_percentage
+        }
+      }
     }
   }
 }

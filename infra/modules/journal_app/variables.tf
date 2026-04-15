@@ -6,6 +6,10 @@ variable "app_name" {
   description = "The name of the application"
   type        = string
 }
+variable "namespace" {
+  description = "The Kubernetes namespace to deploy the application in"
+  type        = string
+}
 variable "image" {
   description = "The container image to use for the application"
   type        = string
@@ -73,4 +77,40 @@ variable "db_env_host_name" {
 variable "db_user_key" {
   description = "The key in the secret for the database user"
   type        = string
+}
+variable "service_name" {
+  description = "The name of the application to be used in naming the HPA."
+  type        = string
+}
+variable "target_ref_kind" {
+  description = "The kind of the target resource for the HPA (e.g., Deployment, StatefulSet)."
+  type        = string
+}
+variable "target_ref_api_version" {
+  description = "The API version of the target resource for the HPA."
+  type        = string
+}
+variable "min_replicas" {
+  description = "The minimum number of replicas for the HPA."
+  type        = number
+}
+variable "max_replicas" {
+  description = "The maximum number of replicas for the HPA."
+  type        = number
+}
+variable "metric_type" {
+  description = "The type of metric to be used for scaling (e.g., Resource, Pods)."
+  type        = string
+}
+variable "resource_target_name" {
+  description = "The name of the resource metric to be used for scaling (e.g., cpu, memory)."
+  type        = string
+}
+variable "resource_target_type" {
+  description = "The name of the Kubernetes deployment that the HPA will target."
+  type        = string
+}
+variable "resource_target_cpu_utilization_percentage" {
+  description = "The target average CPU utilization percentage for the HPA."
+  type        = number
 }

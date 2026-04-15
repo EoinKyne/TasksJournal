@@ -53,6 +53,7 @@ variable "apps" {
   description = "A map of applications to deploy"
   type        = map(object({
     app_name = string
+    namespace = string
     image = string
     image_pull_policy = string
     replicas = number
@@ -71,6 +72,15 @@ variable "apps" {
     init_container_image_pull_policy = string
     db_env_host_name = string
     db_host = string
+    service_name = string
+    target_ref_kind = string
+    target_ref_api_version = string
+    min_replicas = number
+    max_replicas = number
+    metric_type = string
+    resource_target_name = string
+    resource_target_type = string
+    resource_target_cpu_utilization_percentage = number
   }))
 }
 

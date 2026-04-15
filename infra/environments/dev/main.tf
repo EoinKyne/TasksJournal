@@ -50,6 +50,7 @@ module "journal_app" {
 
   for_each = var.apps
     app_name = each.value.app_name
+    namespace = each.value.namespace
     image = each.value.image
     image_pull_policy = each.value.image_pull_policy
     replicas = each.value.replicas
@@ -68,6 +69,15 @@ module "journal_app" {
     init_container_image_pull_policy = each.value.init_container_image_pull_policy
     db_env_host_name = each.value.db_env_host_name
     db_host = each.value.db_host
+    service_name = each.value.service_name
+    target_ref_kind = each.value.target_ref_kind
+    target_ref_api_version = each.value.target_ref_api_version
+    min_replicas = each.value.min_replicas
+    max_replicas = each.value.max_replicas
+    metric_type = each.value.metric_type
+    resource_target_name = each.value.resource_target_name
+    resource_target_type = each.value.resource_target_type
+    resource_target_cpu_utilization_percentage = each.value.resource_target_cpu_utilization_percentage
 }
 
 module "journal_app_web" {
@@ -99,5 +109,4 @@ module "ingress" {
     path_type = each.value.path_type
     service_name = each.value.service_name
     service_port = each.value.service_port
-
 }
