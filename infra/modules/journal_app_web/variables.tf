@@ -58,3 +58,27 @@ variable "service_type" {
   description = "The type of Kubernetes Service to create (e.g., ClusterIP, NodePort, LoadBalancer)."
   type        = string
 }
+variable "readiness_probe_path" {
+  description = "The HTTP path for the readiness probe."
+  type        = string
+}
+variable "readiness_probe_period_seconds" {
+  description = "The period in seconds for the readiness probe."
+  type        = number
+}
+variable "readiness_probe_initial_delay_seconds" {
+  description = "The initial delay in seconds for the readiness probe."
+  type        = number
+}
+variable "liveness_probe_path" {
+  description = "The HTTP path for the liveness probe."
+  type        = string
+}
+variable "liveness_probe_period_seconds" {
+  description = "The period in seconds for the liveness probe."
+  type        = number
+}
+variable "liveness_probe_initial_delay_seconds" {
+  description = "The initial delay in seconds for the liveness probe."
+  type        = number
+}

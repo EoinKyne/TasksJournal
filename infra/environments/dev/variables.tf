@@ -32,8 +32,10 @@ variable "apps_database" {
     replicas = number
     container_port = number
     container_name = string
+
     service_name = string
     cluster_ip = string
+
     secret_name = string
     db_name_key = string
     db_user_key = string
@@ -64,26 +66,41 @@ variable "apps" {
     config_name = string
     secret_name = string
     db_user_key = string
+
     resources_limits_cpu = string
     resources_limits_memory = string
     resources_requests_cpu = string
     resources_requests_memory = string
+
     files_directory_name = string
     files_directory_mount_path = string
+
     init_container_name = string
     init_container_image = string
     init_container_image_pull_policy = string
+
     db_env_host_name = string
     db_host = string
     service_name = string
     target_ref_kind = string
     target_ref_api_version = string
+
     min_replicas = number
     max_replicas = number
     metric_type = string
+
     resource_target_name = string
     resource_target_type = string
     resource_target_cpu_utilization_percentage = number
+
+    readiness_probe_path = string
+    readiness_probe_initial_delay_seconds = number
+    readiness_probe_period_seconds = number
+    probes_http_header_name = string
+    probes_http_header_value = string
+    liveness_probe_path = string
+    liveness_probe_initial_delay_seconds = number
+    liveness_probe_period_seconds = number
   }))
 }
 
@@ -97,14 +114,24 @@ variable "apps_frontend" {
     port = number
     config_name = string
     secret_name = string
+
     files_directory_name = string
     files_directory_mount_path = string
     nginx_config_name = string
     nginx_config_mount_path = string
+
     init_container_name = string
     init_container_image = string
     init_container_image_pull_policy = string
+
     service_type = string
+
+    readiness_probe_path = string
+    readiness_probe_initial_delay_seconds = number
+    readiness_probe_period_seconds = number
+    liveness_probe_path = string
+    liveness_probe_initial_delay_seconds = number
+    liveness_probe_period_seconds = number
   }))
 }
 

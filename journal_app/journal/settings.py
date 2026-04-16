@@ -31,9 +31,9 @@ DEBUG = os.environ.get("DEBUG", "0") == "1"
 
 ALLOWED_HOSTS = ["journal-app",
                  "journal-app-web",
-                 "journal-app.default.svc.cluster.local",
-                 "journal-app-web.default.svc.cluster.local",
-                 "app.local"]
+                 "app.local",
+                 "localhost",
+                 "127.0.0.1"]
 
 
 # Application definition
