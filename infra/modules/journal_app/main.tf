@@ -132,6 +132,7 @@ resource "kubernetes_deployment_v1" "journal_app" {
       }
     }
   }
+  wait_for_rollout = false
 }
 
 resource "kubernetes_service_v1" "journal_app" {
