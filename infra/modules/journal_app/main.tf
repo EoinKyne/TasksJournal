@@ -64,21 +64,8 @@ resource "kubernetes_deployment_v1" "journal_app" {
             }
           }
 
-          command = ["sh", "-c"]
-          args = [<<EOT
-             set -x
-             until pg_isready -h journal-app-data-headless -p 5432 -U "$POSTGRES_USER"; do
-               echo 'Waiting for Postgres...'
-               sleep 2
-             done
-
-             echo 'Postgres ready, running migrations...'
-             python manage.py migrate || exit 1
-
-             echo 'Starting Gunicorn...'
-             gunicorn journal.wsgi:application --bind 0.0.0.0:8000
-             EOT
-             ]
+          command = ["gunicorn"]
+          args = ["journal.wsgi:application", "--bind", "0.0.0.0:8000"]
 
           port {
             container_port = var.container_port
@@ -105,23 +92,31 @@ resource "kubernetes_deployment_v1" "journal_app" {
             mount_path = var.files_directory_mount_path
           }
 
-          #readiness_probe {
-          #  http_get {
-          #    path = "/health/"
-          #    port = 8000
-          #  }
-          #  initial_delay_seconds = 10
-          #  period_seconds        = 5
-          #}
+          readiness_probe {
+            http_get {
+              http_header {
+                  name  = var.probes_http_header_name
+                  value = var.probes_http_header_value
+                }
+              path = var.readiness_probe_path
+              port = var.container_port
+            }
+            initial_delay_seconds = var.readiness_probe_initial_delay_seconds
+            period_seconds        = var.readiness_probe_period_seconds
+          }
 
-          #liveness_probe {
-          #  http_get {
-          #    path = "/health/"
-          #    port = 8000
-          #  }
-          #  initial_delay_seconds = 15
-          #  period_seconds        = 20
-          #}
+          liveness_probe {
+            http_get {
+            http_header {
+                name  = var.probes_http_header_name
+                value = var.probes_http_header_value
+              }
+              path = var.liveness_probe_path
+              port = var.container_port
+            }
+            initial_delay_seconds = var.liveness_probe_initial_delay_seconds
+            period_seconds        = var.liveness_probe_period_seconds
+          }
 
           resources {
             limits = {

@@ -75,6 +75,24 @@ resource "kubernetes_deployment_v1" "journal_app_web" {
             name = var.nginx_config_name
             mount_path = var.nginx_config_mount_path
           }
+
+          readiness_probe {
+            http_get {
+              path = var.readiness_probe_path
+              port = var.port
+            }
+            initial_delay_seconds = var.readiness_probe_initial_delay_seconds
+            period_seconds = var.readiness_probe_period_seconds
+          }
+
+          liveness_probe {
+            http_get {
+              path = var.liveness_probe_path
+              port = var.port
+            }
+            initial_delay_seconds = var.liveness_probe_initial_delay_seconds
+            period_seconds = var.liveness_probe_period_seconds
+          }
         }
       }
     }
@@ -108,7 +126,7 @@ resource "kubernetes_config_map_v1" "nginx_config" {
     "default.conf" = <<-EOT
       server {
         listen 80;
-        server_name localhost;
+        server_name _;
         location / {
           proxy_pass http://journal-app:8000;
           proxy_set_header Host $host;
@@ -118,6 +136,10 @@ resource "kubernetes_config_map_v1" "nginx_config" {
         }
         location /static/ {
           alias /static-files/;
+        }
+        location /health/ {
+          access_log off;
+          return 200 'OK';
         }
       }
     EOT

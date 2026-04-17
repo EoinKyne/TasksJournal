@@ -114,3 +114,35 @@ variable "resource_target_cpu_utilization_percentage" {
   description = "The target average CPU utilization percentage for the HPA."
   type        = number
 }
+variable "readiness_probe_path" {
+  description = "The HTTP path for the readiness probe."
+  type        = string
+}
+variable "readiness_probe_initial_delay_seconds" {
+  description = "The initial delay in seconds before the readiness probe is initiated."
+  type        = number
+}
+variable "readiness_probe_period_seconds" {
+  description = "The period in seconds between each readiness probe."
+  type        = number
+}
+variable "liveness_probe_path" {
+  description = "The HTTP path for the liveness probe."
+  type        = string
+}
+variable "liveness_probe_initial_delay_seconds" {
+  description = "The initial delay in seconds before the liveness probe is initiated."
+  type        = number
+}
+variable "liveness_probe_period_seconds" {
+  description = "The period in seconds between each liveness probe."
+  type        = number
+}
+variable "probes_http_header_name" {
+  description = "The name of the HTTP header to be included in the probes."
+  type        = string
+}
+variable "probes_http_header_value" {
+  description = "The value of the HTTP header to be included in the probes."
+  type        = string
+}

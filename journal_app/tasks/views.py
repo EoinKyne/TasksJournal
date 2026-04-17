@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http.response import JsonResponse
+from django.db import connections
+from django.db.utils import OperationalError
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 
@@ -19,3 +21,11 @@ def home(request):
 
 def health(request):
     return JsonResponse({"status": "ok"})
+
+
+def ready(request):
+    try:
+        connections['default'].cursor()
+    except OperationalError:
+        return JsonResponse({"status": "not ready"}, status=503)
+    return JsonResponse({"status": "ready"})

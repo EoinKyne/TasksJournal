@@ -70,6 +70,14 @@ resource "kubernetes_stateful_set_v1" "journal_app_data" {
             name       = var.storage_name
             mount_path = var.storage_path
           }
+
+          readiness_probe {
+            exec {
+              command = ["sh", "-c", "pg_isready -h localhost -U var.db_user_key"]
+            }
+            initial_delay_seconds = var.readiness_probe_initial_delay_seconds
+            period_seconds = var.readiness_probe_period_seconds
+          }
         }
       }
     }
