@@ -31,7 +31,7 @@ DEBUG = os.environ.get("DEBUG", "0") == "1"
 
 ALLOWED_HOSTS = ["journal-app",
                  "journal-app-web",
-                 "app.local",
+                 "simplememo.org",
                  "localhost",
                  "127.0.0.1"]
 

@@ -15,7 +15,7 @@ variable "DEBUG" {
 variable "ALLOWED_HOSTS" {
   description = "Django allowed hosts."
   type        = string
-  default     = "app.local"
+  default     = "simplememo.org"
 }
 variable "DB_HOST" {
   description = "Database host for the application."
