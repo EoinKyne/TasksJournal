@@ -10,7 +10,7 @@ variable "namespace" {
 variable "host" {
   description = "The host for the ingress rule"
   type        = string
-  default     = "app.local"
+  default     = "simplememo.org"
 }
 variable "path" {
   description = "The path for the ingress rule"
