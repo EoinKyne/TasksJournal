@@ -26,7 +26,7 @@ jobs:
           docker build ./journal_app/ -t ${{ secrets.DOCKER_HUB_USER }}/journal-app:0.0.3
           docker build ./journal_app/ -t ${{ secrets.DOCKER_HUB_USER }}/journal-app:latest
           docker build ./nginx/ -t ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:0.0.3
-          docker build ./nginx/ -t ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:0.0.3
+          docker build ./nginx/ -t ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:latest
       - name: push docker image
         run: |
           docker push ${{ secrets.DOCKER_HUB_USER }}/journal-app:0.0.3
