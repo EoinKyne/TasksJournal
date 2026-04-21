@@ -2,3 +2,17 @@ name: Run tests
 
 on:
   workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Run tests with coverage
+        run: |
+          python manage.py test
