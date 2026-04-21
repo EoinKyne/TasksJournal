@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - "*.*.*"
+      - "v*.*.*"
   #    - main
   #pull_request:
   #  branches:
@@ -15,21 +15,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+
       - name: Extract version from tag
         id: vars
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USER }}" --password-stdin
-      - name: Build and push Docker image
-        run: |
-          docker build ./journal_app/ -t ${{ secrets.DOCKER_HUB_USER }}/journal-app:0.0.3
-          docker build ./journal_app/ -t ${{ secrets.DOCKER_HUB_USER }}/journal-app:latest
-          docker build ./nginx/ -t ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:0.0.3
-          docker build ./nginx/ -t ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:latest
-      - name: push docker image
-        run: |
-          docker push ${{ secrets.DOCKER_HUB_USER }}/journal-app:0.0.3
-          docker push ${{ secrets.DOCKER_HUB_USER }}/journal-app:latest
-          docker push ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:0.0.3
-          docker push ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:latest
+
+      - name: Build and push journal-app image (multi-arch + cache)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./journal_app/
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_HUB_USER }}/journal-app:${{ env.VERSION }}
+            ${{ secrets.DOCKER_HUB_USER }}/journal-app:latest
+            platforms: linux/amd64,linux/arm64
+            cache-from: type=gha
+            cache-to: type=gha,mode=max
+
+      - name: Build and push journal-app-web image (multi-arch + cache)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./nginx/
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:${{ env.VERSION }}
+            ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:latest
+            platforms: linux/amd64,linux/arm64
+            cache-from: type=gha
+            cache-to: type=gha,mode=max
