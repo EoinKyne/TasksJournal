@@ -23,8 +23,8 @@ jobs:
         run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USER }}" --password-stdin
       - name: Build and push Docker image
         run: |
-          docker build . -t ${{ secrets.DOCKER_HUB_USER }}/journal-app:${{ vars.VERSION }}
-          docker build . -t ${{ secrets.DOCKER_HUB_USER }}/journal-app:latest
+          docker build ./journal_app/ -t ${{ secrets.DOCKER_HUB_USER }}/journal-app:${{ vars.VERSION }}
+          docker build ./journal_app/ -t ${{ secrets.DOCKER_HUB_USER }}/journal-app:latest
       - name: push docker image
         run: |
           docker push ${{ secrets.DOCKER_HUB_USER }}/journal-app:${{ vars.VERSION }}
