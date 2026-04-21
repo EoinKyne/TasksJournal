@@ -17,9 +17,9 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v5
 
-      - name: Extract version from tag
+      - name: Extract version
         id: vars
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -36,7 +36,7 @@ jobs:
           context: ./journal_app/
           push: true
           tags: |
-            ${{ secrets.DOCKER_HUB_USER }}/journal-app:${{ env.VERSION }}
+            ${{ secrets.DOCKER_HUB_USER }}/journal-app:${{ steps.vars.outputs.VERSION }}
             ${{ secrets.DOCKER_HUB_USER }}/journal-app:latest
             platforms: linux/amd64,linux/arm64
             cache-from: type=gha
@@ -48,7 +48,7 @@ jobs:
           context: ./nginx/
           push: true
           tags: |
-            ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:${{ env.VERSION }}
+            ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:${{ steps.vars.outputs.VERSION }}
             ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:latest
             platforms: linux/amd64,linux/arm64
             cache-from: type=gha
