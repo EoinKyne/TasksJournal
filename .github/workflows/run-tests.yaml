@@ -2,6 +2,9 @@ name: Run tests
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - feature-create-githubactions-workflow-for-tests
 
 jobs:
   test:
