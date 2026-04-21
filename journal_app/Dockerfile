@@ -11,8 +11,8 @@ COPY journal_app/requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY journal_app/journal /app/journal_app/journal
-COPY journal_app/tasks  /app/journal_app/tasks
+COPY journal /app/journal_app/journal
+COPY tasks  /app/journal_app/tasks
 
 WORKDIR /app/journal_app
 
