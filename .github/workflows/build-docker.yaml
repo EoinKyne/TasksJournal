@@ -21,6 +21,6 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PWD }}
 
       - name: Build and push Docker image
-        run: docker build . -t ${{ secrets.DOCKER_HUB_USER }}/journal_app/journal:latest
+        run: docker build ./journal_app/ -t ${{ secrets.DOCKER_HUB_USER }}/journal_app/journal:latest
       - name: push docker image
         run: docker push ${{ secrets.DOCKER_HUB_USER }}/journal_app/journal:latest
