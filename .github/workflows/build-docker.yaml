@@ -38,9 +38,9 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_HUB_USER }}/journal-app:${{ steps.vars.outputs.VERSION }}
             ${{ secrets.DOCKER_HUB_USER }}/journal-app:latest
-            platforms: linux/amd64,linux/arm64
-            cache-from: type=gha
-            cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Build and push journal-app-web image (multi-arch + cache)
         uses: docker/build-push-action@v5
@@ -50,6 +50,6 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:${{ steps.vars.outputs.VERSION }}
             ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:latest
-            platforms: linux/amd64,linux/arm64
-            cache-from: type=gha
-            cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
