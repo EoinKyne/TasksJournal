@@ -2,9 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: journal-app-ingress
+  namespace: default
 spec:
   rules:
-    - host: app.local
+    - host: simplememo.org
       http:
         paths:
           - path: /

@@ -18,8 +18,8 @@ spec:
 
       initContainers:
         - name: migrate
-          image: journal-app:latest
-          imagePullPolicy: Never
+          image: eoinkyne/journal-app:0.0.3
+          imagePullPolicy: IfNotPresent
           command: ["python", "manage.py", "migrate"]
           envFrom:
             - configMapRef:
@@ -29,8 +29,8 @@ spec:
 
       containers:
         - name: journal-app
-          image: journal-app:latest
-          imagePullPolicy: Never
+          image: eoinkyne/journal-app:0.0.3
+          imagePullPolicy: IfNotPresent
           command: ["gunicorn"]
           args:
             ["journal.wsgi:application", "--bind", "0.0.0.0:8000"]
@@ -46,8 +46,26 @@ spec:
               mountPath: /app/staticfiles/
           resources:
             requests:
-              cpu: "100m"
-              memory: "128Mi"
+              cpu: "250m"
+              memory: "256Mi"
             limits:
               cpu: "500m"
               memory: "512Mi"
+          readinessProbe:
+            httpGet:
+              httpHeaders:
+                - name: Host
+                  value: simplememo.org
+              path: /ready/
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              httpHeaders:
+                - name: Host
+                  value: simplememo.org
+              path: /health/
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
