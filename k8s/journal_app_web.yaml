@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: journal-app-web
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -20,16 +21,16 @@ spec:
             name: nginx-config
       initContainers:
           - name: copy-static
-            image: journal-app:latest
-            imagePullPolicy: Never
+            image: eoinkyne/journal-app:0.0.3
+            imagePullPolicy: IfNotPresent
             command: [ "sh", "-c", "cp -r /app/staticfiles/* /static-files/" ]
             volumeMounts:
               - name: static-files
                 mountPath: /static-files
       containers:
         - name: journal-app-web
-          image: journal-app-web:latest
-          imagePullPolicy: Never
+          image: eoinkyne/journal-app-web:0.0.3
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
           volumeMounts:
@@ -37,3 +38,15 @@ spec:
               mountPath: /app/staticfiles/
             - name: nginx-config
               mountPath: /etc/nginx/conf.d
+          readinessProbe:
+            httpGet:
+              path: /health/
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health/
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 20

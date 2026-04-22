@@ -4,6 +4,6 @@ metadata:
   name: app-config
 data:
   DEBUG: "0"
-  ALLOWED_HOSTS: "app.local"
-  DB_HOST: journal-app-data
+  ALLOWED_HOSTS: "simplememo.org"
+  DB_HOST: journal-app-data-headless
   DB_PORT: "5432"
