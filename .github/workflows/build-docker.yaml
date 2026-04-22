@@ -55,9 +55,9 @@ jobs:
           cache-to: type=gha,mode=max
   deploy:
     needs: publish
-    runs-on: [ self-hosted,simplememo ]
+    runs-on: [ self-hosted, linux, x64 ]
     steps:
-      - name: Check out the repository
+      - name: Check out the repositsimplememoory
         uses: actions/checkout@v5
       - name: Update image tags
         run: |
