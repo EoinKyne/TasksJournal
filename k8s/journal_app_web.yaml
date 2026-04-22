@@ -26,7 +26,7 @@ spec:
             command: [ "sh", "-c", "cp -r /app/staticfiles/* /static-files/" ]
             volumeMounts:
               - name: static-files
-                mountPath: /static-files
+                mountPath: /app/staticfiles/
       containers:
         - name: journal-app-web
           image: eoinkyne/journal-app-web:0.0.3

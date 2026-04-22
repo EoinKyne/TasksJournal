@@ -53,3 +53,18 @@ jobs:
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
+  deploy:
+    needs: publish
+    runs-on: [ self-hosted,simplememo ]
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+      - name: Update image tags
+        run: |
+          sed -i "s|image: .*/journal-app:.*|image: ${{ secrets.DOCKER_HUB_USER }}/journal-app:${{ steps.vars.outputs.VERSION }}|g" k8s/journal_app_deployment.yaml
+          sed -i "s|image: .*/journal-app-web:.*|image: ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:${{ steps.vars.outputs.VERSION }}|g" k8s/journal_app_deployment.yaml
+      - name: Deploy to miniube
+        run: |
+          kubectl apply -f k8s/
+          kubectl rollout status deployment/journal_app.yaml
+          kubectl rollout status deployment/journal_app_web.yaml
