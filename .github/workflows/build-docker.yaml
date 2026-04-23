@@ -57,15 +57,19 @@ jobs:
     needs: publish
     runs-on: [ self-hosted, linux, x64 ]
     steps:
-      - name: Check out the repositsimplememoory
+      - name: Check out the repository
         uses: actions/checkout@v5
       - name: Update image tags
         run: |
           sed -i "s|image: .*/journal-app:.*|image: ${{ secrets.DOCKER_HUB_USER }}/journal-app:${{ steps.vars.outputs.VERSION }}|g" k8s/journal_app.yaml
           sed -i "s|image: .*/journal-app:.*|image: ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:${{ steps.vars.outputs.VERSION }}|g" k8s/journal_app_web.yaml
           sed -i "s|image: .*/journal-app-web:.*|image: ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:${{ steps.vars.outputs.VERSION }}|g" k8s/journal_app_web.yaml
-      - name: Deploy to miniube
+      - name: Show rendered YAML files
+        run: |
+          nl -ba k8s/journal_app.yaml
+          nl -ba k8s/journal_app_web.yaml
+      - name: Deploy to minikube
         run: |
           kubectl apply -f k8s/
-          kubectl rollout status deployment/journal_app.yaml
-          kubectl rollout status deployment/journal_app_web.yaml
+          kubectl rollout status deployment/journal_app
+          kubectl rollout status deployment/journal_app_web
