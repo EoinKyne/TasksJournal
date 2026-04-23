@@ -61,9 +61,9 @@ jobs:
         uses: actions/checkout@v5
       - name: Update image tags
         run: |
-          sed -i "s|image: .*/journal-app:.*|image: "eoinkyne/journal-app:0.0.34"|g" k8s/journal_app.yaml
-          sed -i "s|image: .*/journal-app:.*|image: "eoinkyne/journal-app:0.0.34"|g" k8s/journal_app_web.yaml
-          sed -i "s|image: .*/journal-app-web:.*|image: "eoinkyne/journal-app-web:0.0.34"|g" k8s/journal_app_web.yaml
+          sed -i "s|image: .*/journal-app:.*|image: "eoinkyne/journal-app:0.0.35"|g" k8s/journal_app.yaml
+          sed -i "s|image: .*/journal-app:.*|image: "eoinkyne/journal-app:0.0.35"|g" k8s/journal_app_web.yaml
+          sed -i "s|image: .*/journal-app-web:.*|image: "eoinkyne/journal-app-web:0.0.35"|g" k8s/journal_app_web.yaml
       - name: Show rendered YAML files
         run: |
           nl -ba k8s/journal_app.yaml
@@ -71,5 +71,5 @@ jobs:
       - name: Deploy to minikube
         run: |
           kubectl apply -f k8s/
-          kubectl rollout status deployment/journal_app
-          kubectl rollout status deployment/journal_app_web
+          kubectl rollout status deployment/journal-app
+          kubectl rollout status deployment/journal-app-web
