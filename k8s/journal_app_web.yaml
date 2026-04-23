@@ -23,10 +23,10 @@ spec:
           - name: copy-static
             image: eoinkyne/journal-app:0.0.3
             imagePullPolicy: IfNotPresent
-            command: [ "sh", "-c", "cp -r /app/staticfiles/* /static-files/" ]
+            command: [ "sh", "-c", "cp -r /app/staticfiles/. /static-files/" ]
             volumeMounts:
               - name: static-files
-                mountPath: /app/staticfiles/
+                mountPath: /static-files
       containers:
         - name: journal-app-web
           image: eoinkyne/journal-app-web:0.0.3
