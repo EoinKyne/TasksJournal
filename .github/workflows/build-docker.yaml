@@ -61,9 +61,9 @@ jobs:
         uses: actions/checkout@v5
       - name: Update image tags
         run: |
-          sed -i "s|image: .*/journal-app:.*|image: "${{ secrets.DOCKER_HUB_USER }}/journal-app:${{ steps.vars.outputs.VERSION }}"|g" k8s/journal_app.yaml
-          sed -i "s|image: .*/journal-app:.*|image: "${{ secrets.DOCKER_HUB_USER }}/journal-app-web:${{ steps.vars.outputs.VERSION }}"|g" k8s/journal_app_web.yaml
-          sed -i "s|image: .*/journal-app-web:.*|image: "${{ secrets.DOCKER_HUB_USER }}/journal-app-web:${{ steps.vars.outputs.VERSION }}"|g" k8s/journal_app_web.yaml
+          sed -i "s|image: .*/journal-app:.*|image: "eoinkyne/journal-app:0.0.32"|g" k8s/journal_app.yaml
+          sed -i "s|image: .*/journal-app:.*|image: "eoinkyne/journal-app-web:0.0.32"|g" k8s/journal_app_web.yaml
+          sed -i "s|image: .*/journal-app-web:.*|image: "eoinkyne/journal-app-web:0.0.32"|g" k8s/journal_app_web.yaml
       - name: Show rendered YAML files
         run: |
           nl -ba k8s/journal_app.yaml
