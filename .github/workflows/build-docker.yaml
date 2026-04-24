@@ -53,3 +53,23 @@ jobs:
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
+  deploy:
+    needs: publish
+    runs-on: [ self-hosted, linux, x64 ]
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+      - name: Update image tags
+        run: |
+          sed -i "s|image: .*/journal-app:.*|image: "eoinkyne/journal-app:0.0.36"|g" k8s/journal_app.yaml
+          sed -i "s|image: .*/journal-app:.*|image: "eoinkyne/journal-app:0.0.36"|g" k8s/journal_app_web.yaml
+          sed -i "s|image: .*/journal-app-web:.*|image: "eoinkyne/journal-app-web:0.0.36"|g" k8s/journal_app_web.yaml
+      - name: Show rendered YAML files
+        run: |
+          nl -ba k8s/journal_app.yaml
+          nl -ba k8s/journal_app_web.yaml
+      - name: Deploy to minikube
+        run: |
+          kubectl apply -f k8s/
+          kubectl rollout status deployment/journal-app
+          kubectl rollout status deployment/journal-app-web

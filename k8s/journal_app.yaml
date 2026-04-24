@@ -18,7 +18,7 @@ spec:
 
       initContainers:
         - name: migrate
-          image: eoinkyne/journal-app:0.0.3
+          image: eoinkyne/journal-app:0.0.35
           imagePullPolicy: IfNotPresent
           command: ["python", "manage.py", "migrate"]
           envFrom:
@@ -29,7 +29,7 @@ spec:
 
       containers:
         - name: journal-app
-          image: eoinkyne/journal-app:0.0.3
+          image: eoinkyne/journal-app:0.0.35
           imagePullPolicy: IfNotPresent
           command: ["gunicorn"]
           args:
@@ -41,9 +41,6 @@ spec:
                 name: app-config
             - secretRef:
                 name: app-secrets
-          volumeMounts:
-            - name: static-files
-              mountPath: /app/staticfiles/
           resources:
             requests:
               cpu: "250m"
