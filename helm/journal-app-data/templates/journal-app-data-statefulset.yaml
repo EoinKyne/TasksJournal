@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}
+    spec:
+      securityContext:
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+      containers:
+        - name: {{ .Values.name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          ports:
+            - containerPort: {{ .Values.port }}
+          envFrom:
+            {{ range .Values.envFrom }}
+            - {{ toYaml . | nindent 14 }}
+            {{ end }}
+          volumeMounts:
+            {{ range .Values.volumneMounts }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+            {{ end }}
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "pg_isready", "-U", "$(POSTGRES_USER)"]
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.persistence.name }}
+      spec:
+        accessModes: {{ toYaml .Values.persistence.accessModes | nindent 8 }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.resources.requests.storage }}
+        storageClassName: {{ .Values.persistence.storageClassName }}

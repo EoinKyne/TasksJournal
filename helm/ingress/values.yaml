@@ -1,0 +1,8 @@
+name: journal-app-ingress
+namespace: default
+rules:
+  host: simplememo.org
+  path: /
+  pathType: Prefix
+  port: 80
+  serviceName: journal-app-web

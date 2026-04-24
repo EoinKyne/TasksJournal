@@ -1,0 +1,62 @@
+name: journal-app
+namespace: default
+
+replicas: 1
+
+volumes:
+  - name: static-files
+    emptyDir: {}
+
+image:
+  repository: eoinkyne/journal-app
+  tag: 0.0.25
+  pullPolicy: IfNotPresent
+
+initContainers:
+  - name: journal-app-migrate
+
+port: 8000
+
+envFrom:
+  - configMapRef:
+      name: app-config
+  - secretRef:
+      name: app-secrets
+
+volumeMounts:
+  - name: static-files
+    mountPath: /app/staticfiles/
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+readinessProbe:
+  - name: Host
+    value: simplememo.org
+    path: /ready/
+    initialDelaySeconds: 15
+    periodSeconds: 5
+
+livenessProbe:
+  - name: Host
+    value: simplememo.org
+    path: /health/
+    initialDelaySeconds: 15
+    periodSeconds: 20
+
+hpa:
+  name: journal-app-hpa
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50

@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}
+    spec:
+      volumes:
+        {{ range .Values.volumes }}
+        - name: {{ .name }}
+          {{ if .emptyDir }}
+          emptyDir:
+        {{ toYaml .emptyDir | nindent 6 }}
+          {{ end }}
+        {{ end }}
+
+      initContainers:
+          {{- range .Values.initContainers }}
+        - name: {{ .name }}
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          command: ["python", "manage.py", "migrate"]
+          envFrom:
+          {{- range $.Values.envFrom }}
+              - {{ toYaml . | nindent 16 }}
+            {{- end }}
+          {{- end }}
+
+      containers:
+        - name: {{ .Values.name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["gunicorn"]
+          args:
+            ["journal.wsgi:application", "--bind", "0.0.0.0:8000"]
+          ports:
+            - containerPort: {{ .Values.port }}
+          envFrom:
+            {{- range $.Values.envFrom }}
+              - {{ toYaml . | nindent 16 }}
+            {{ end }}
+          volumeMounts:
+            {{ range .Values.volumeMounts }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+            {{ end }}
+          resources:
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
+          readinessProbe:
+          {{- range .Values.readinessProbes }}
+            httpGet:
+              httpHeaders:
+                - name: {{ .name }}
+                  value: {{ .value }}
+              path: {{ .path }}
+              port: {{ .Values.port }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+          {{- end }}
+          livenessProbe:
+          {{- range .Values.livenessProbes }}
+            httpGet:
+              httpHeaders:
+                - name: {{ .name }}
+                  value: {{ .value }}
+              path: {{ .path }}
+              port: {{ .Values.port }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+            {{- end }}
