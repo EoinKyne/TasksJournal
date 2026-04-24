@@ -1,0 +1,45 @@
+name: journal-app-web
+namespace: default
+
+replicas: 1
+port: 80
+serviceType: ClusterIP
+configMapName: nginx-config
+
+volumes:
+  - name: static-files
+    emptyDir: {}
+  - name: nginx-config
+    configMap:
+      name: nginx-config
+
+initContainers:
+    - name: copy-static
+      image:
+        repository: eoinkyne/journal-app
+        tag: 0.0.25
+      imagePullPolicy: IfNotPresent
+      volumeMounts:
+        - name: static-files
+          mountPath: /static-files
+
+image:
+    repository: eoinkyne/journal-app-web
+    tag: 0.0.25
+    pullPolicy: IfNotPresent
+
+volumeMounts:
+  - name: static-files
+    mountPath: /app/staticfiles/
+  - name: nginx-config
+    mountPath: /etc/nginx/conf.d
+
+readinessProbe:
+  path: /health/
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+livenessProbe:
+  path: /health/
+  initialDelaySeconds: 10
+  periodSeconds: 20

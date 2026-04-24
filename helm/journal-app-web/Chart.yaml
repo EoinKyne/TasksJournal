@@ -1,0 +1,5 @@
+apiVersion: v2
+name: journal-app-web
+description: A Helm chart for Kubernetes to deploy the journal app web server
+version: 0.0.1
+appVersion: 0.0.1
