@@ -1,8 +1,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+<<<<<<< HEAD:helm/journal-app-web/templates/nginx-config.yaml
   name: {{ .Values.configMapName }}
   namespace: {{ .Values.namespace }}
+=======
+  name: nginx-config
+  namespace: default
+>>>>>>> main:k8s/nginx-config.yaml
 data:
   default.conf: |
     server {
