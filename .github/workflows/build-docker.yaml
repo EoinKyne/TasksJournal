@@ -36,8 +36,8 @@ jobs:
           context: ./journal_app/
           push: true
           tags: |
-            ${{ secrets.DOCKER_HUB_USER }}/journal-app:${{ steps.vars.outputs.VERSION }}
-            ${{ secrets.DOCKER_HUB_USER }}/journal-app:latest
+            ${{ secrets.DOCKER_HUB_REPO }}/journal-app:${{ steps.vars.outputs.VERSION }}
+            ${{ secrets.DOCKER_HUB_REPO }}/journal-app:latest
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -48,8 +48,8 @@ jobs:
           context: ./nginx/
           push: true
           tags: |
-            ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:${{ steps.vars.outputs.VERSION }}
-            ${{ secrets.DOCKER_HUB_USER }}/journal-app-web:latest
+            ${{ secrets.DOCKER_HUB_REPO }}/journal-app-web:${{ steps.vars.outputs.VERSION }}
+            ${{ secrets.DOCKER_HUB_REPO }}/journal-app-web:latest
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -59,17 +59,23 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v5
-      - name: Update image tags
+      - name: Create Kubernetes secrets
         run: |
-          sed -i "s|image: .*/journal-app:.*|image: "eoinkyne/journal-app:0.0.36"|g" k8s/journal_app.yaml
-          sed -i "s|image: .*/journal-app:.*|image: "eoinkyne/journal-app:0.0.36"|g" k8s/journal_app_web.yaml
-          sed -i "s|image: .*/journal-app-web:.*|image: "eoinkyne/journal-app-web:0.0.36"|g" k8s/journal_app_web.yaml
-      - name: Show rendered YAML files
+          kubectl create secret generic app-secrets \
+            --from-literal=SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+            --from-literal=POSTGRES_DB="{{ secrets.DB }}" \
+            --from-literal=POSTGRES_USER="{{ secrets.POSTGRES_USER }}" \
+            --from-literal=POSTGRES_PASSWORD="{{ secrets.POSTGRES_PASSWORD }}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+      - name: Deploye with Helm
         run: |
-          nl -ba k8s/journal_app.yaml
-          nl -ba k8s/journal_app_web.yaml
-      - name: Deploy to minikube
+          helm upgrade --install journal-app helm/journal-app \
+          --values helm/journal-app/values.yaml \
+          --set image.repository="${{ secrets.DOCKER_HUB_REPO }}/journal-app",image.tag="${{ steps.vars.outputs.VERSION }}"
+          helm upgrade --install journal-app-web helm/journal-app-web \
+          --values helm/journal-app-web/values.yaml \
+          --set image.repository="${{ secrets.DOCKER_HUB_REPO }}/journal-app-web",image.tag="${{ steps.vars.outputs.VERSION }}"
+      - name: Verify rollout status
         run: |
-          kubectl apply -f k8s/
           kubectl rollout status deployment/journal-app
           kubectl rollout status deployment/journal-app-web
