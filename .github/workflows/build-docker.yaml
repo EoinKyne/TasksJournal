@@ -69,10 +69,10 @@ jobs:
             --dry-run=client -o yaml | kubectl apply -f -
       - name: Deploye with Helm
         run: |
-          helm upgrade --install journal-app helm/journal-app \
+          /usr/local/bin/helm upgrade --install journal-app ./helm/journal-app \
           --values helm/journal-app/values.yaml \
           --set image.repository="${{ secrets.DOCKER_HUB_REPO }}/journal-app",image.tag="${{ steps.vars.outputs.VERSION }}"
-          helm upgrade --install journal-app-web helm/journal-app-web \
+          /usr/local/bin/helm upgrade --install journal-app-web helm/journal-app-web \
           --values helm/journal-app-web/values.yaml \
           --set image.repository="${{ secrets.DOCKER_HUB_REPO }}/journal-app-web",image.tag="${{ steps.vars.outputs.VERSION }}"
       - name: Verify rollout status
