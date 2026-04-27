@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: app-config
-data:
-  DEBUG: "0"
-  ALLOWED_HOSTS: "simplememo.org"
-  DB_HOST: journal-app-data-headless
-  DB_PORT: "5432"

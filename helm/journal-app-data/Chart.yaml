@@ -1,0 +1,5 @@
+apiVersion: v2
+name: journal-app-data
+description: A Helm chart for Kubernetes to manage journal app data
+version: 0.0.1
+appVersion: 0.0.1
