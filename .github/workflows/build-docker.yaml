@@ -82,6 +82,9 @@ jobs:
                 repository: "${{ secrets.DOCKER_HUB_REPO }}/journal-app"
                 tag: "${{ steps.vars.outputs.VERSION }}"
           EOF
+      - name: Print override file
+        run: nl -ba helm/override.yaml
+
       - name: Deploy with Helm
         run: |
           /usr/local/bin/helm upgrade --install journal-app ./helm/journal-app \
