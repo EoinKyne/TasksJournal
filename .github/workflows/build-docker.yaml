@@ -67,14 +67,29 @@ jobs:
             --from-literal=POSTGRES_USER="{{ secrets.POSTGRES_USER }}" \
             --from-literal=POSTGRES_PASSWORD="{{ secrets.POSTGRES_PASSWORD }}" \
             --dry-run=client -o yaml | kubectl apply -f -
-      - name: Deploye with Helm
+      - name: Create Helm override file
+        run: |
+          cat <<EOF > helm/override.yaml
+            image:
+              repository: "${{ secrets.DOCKER_HUB_REPO }}/journal-app-web"
+              tag: "${{ steps.vars.outputs.VERSION }}"
+            initContainers:
+            - name: copy-static
+                repository: "${{ secrets.DOCKER_HUB_REPO }}/journal-app"
+                tag: "${{ steps.vars.outputs.VERSION }}"
+          EOF
+      - name: Deploy with Helm
         run: |
           /usr/local/bin/helm upgrade --install journal-app ./helm/journal-app \
           --values helm/journal-app/values.yaml \
-          --set image.repository="${{ secrets.DOCKER_HUB_REPO }}/journal-app",image.tag="${{ steps.vars.outputs.VERSION }}"
+          --set image.repository="${{ secrets.DOCKER_HUB_REPO }}/journal-app" \
+          --set image.tag="${{ steps.vars.outputs.VERSION }}"
           /usr/local/bin/helm upgrade --install journal-app-web helm/journal-app-web \
           --values helm/journal-app-web/values.yaml \
-          --set image.repository="${{ secrets.DOCKER_HUB_REPO }}/journal-app-web",image.tag="${{ steps.vars.outputs.VERSION }}"
+          --set image.repository="${{ secrets.DOCKER_HUB_REPO }}/journal-app-web" \
+          --set image.tag="${{ steps.vars.outputs.VERSION }}"
+          -f helm/override.yaml
+
       - name: Verify rollout status
         run: |
           kubectl rollout status deployment/journal-app
