@@ -78,6 +78,7 @@ jobs:
               tag: "${{ steps.vars.outputs.VERSION }}"
             initContainers:
             - name: copy-static
+              image:
                 repository: "${{ secrets.DOCKER_HUB_REPO }}/journal-app"
                 tag: "${{ steps.vars.outputs.VERSION }}"
           EOF
