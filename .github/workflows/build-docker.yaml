@@ -59,6 +59,9 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v5
+      - name: Extract version
+        id: vars
+        run: echo "VERSION=0.0.${{ github.run_number }}" >> $GITHUB_OUTPUT
       - name: Create Kubernetes secrets
         run: |
           kubectl create secret generic app-secrets \
@@ -87,7 +90,7 @@ jobs:
           /usr/local/bin/helm upgrade --install journal-app-web helm/journal-app-web \
           --values helm/journal-app-web/values.yaml \
           --set image.repository="${{ secrets.DOCKER_HUB_REPO }}/journal-app-web" \
-          --set image.tag="${{ steps.vars.outputs.VERSION }}"
+          --set image.tag="${{ steps.vars.outputs.VERSION }}" \
           -f helm/override.yaml
 
       - name: Verify rollout status
