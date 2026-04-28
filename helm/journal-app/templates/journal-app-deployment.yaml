@@ -46,11 +46,6 @@ spec:
             {{- range $.Values.envFrom }}
               - {{ toYaml . | nindent 16 }}
             {{ end }}
-          volumeMounts:
-            {{ range .Values.volumeMounts }}
-            - name: {{ .name }}
-              mountPath: {{ .mountPath }}
-            {{ end }}
           resources:
             requests:
               cpu: {{ .Values.resources.requests.cpu }}

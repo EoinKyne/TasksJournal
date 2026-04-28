@@ -23,10 +23,6 @@ envFrom:
   - secretRef:
       name: app-secrets
 
-volumeMounts:
-  - name: static-files
-    mountPath: /app/staticfiles/
-
 resources:
   requests:
     cpu: "250m"
