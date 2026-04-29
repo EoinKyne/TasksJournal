@@ -1,0 +1,25 @@
+name: Install DB
+env:
+  TF_VAR_postgres_db: ${{ secrets.POSTGRES_DB }}
+  TF_VAR_postgres_user: ${{ secrets.POSTGRES_USER }}
+  TF_VAR_postgres_password: ${{ secrets.POSTGRES_PASSWORD }}
+  TF_VAR_secret_key: ${{ secrets.SECRET_KEY }}
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: [ self-hosted, linux, x64 ]
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -var-file=terraform.tfvars
