@@ -3,6 +3,10 @@ variable "apps_secrets" {
   type        = map(object({
     app_name = string
     namespace = string
+    postgres_db = string
+    postgres_user = string
+    postgres_password = string
+    secret_key = string
   }))
 }
 
