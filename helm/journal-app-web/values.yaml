@@ -16,17 +16,17 @@ volumes:
 initContainers:
     - name: copy-static
       image:
-        repository: eoinkyne/journal-app
-        tag: 0.0.25
-      imagePullPolicy: IfNotPresent
+        repository: ""
+        tag: ""
+      imagePullPolicy: Always
       volumeMounts:
         - name: static-files
           mountPath: /static-files
 
 image:
-    repository: eoinkyne/journal-app-web
-    tag: 0.0.25
-    pullPolicy: IfNotPresent
+    repository: ""
+    tag: ""
+    pullPolicy: Always
 
 volumeMounts:
   - name: static-files

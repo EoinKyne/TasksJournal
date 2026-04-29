@@ -8,9 +8,9 @@ volumes:
     emptyDir: {}
 
 image:
-  repository: eoinkyne/journal-app
-  tag: 0.0.25
-  pullPolicy: IfNotPresent
+  repository: ""
+  tag: ""
+  pullPolicy: Always
 
 initContainers:
   - name: journal-app-migrate
@@ -22,10 +22,6 @@ envFrom:
       name: app-config
   - secretRef:
       name: app-secrets
-
-volumeMounts:
-  - name: static-files
-    mountPath: /app/staticfiles/
 
 resources:
   requests:

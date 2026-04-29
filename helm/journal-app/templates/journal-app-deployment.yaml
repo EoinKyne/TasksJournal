@@ -35,7 +35,7 @@ spec:
 
       containers:
         - name: {{ .Values.name }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["gunicorn"]
           args:
@@ -45,11 +45,6 @@ spec:
           envFrom:
             {{- range $.Values.envFrom }}
               - {{ toYaml . | nindent 16 }}
-            {{ end }}
-          volumeMounts:
-            {{ range .Values.volumeMounts }}
-            - name: {{ .name }}
-              mountPath: {{ .mountPath }}
             {{ end }}
           resources:
             requests:

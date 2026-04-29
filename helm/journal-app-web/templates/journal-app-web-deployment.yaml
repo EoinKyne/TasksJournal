@@ -15,7 +15,7 @@ spec:
     spec:
       volumes:
         {{ range .Values.volumes }}
-        - name: {{ .name}}
+        - name: {{ .name }}
             {{- if .emptyDir }}
           emptyDir: { toYaml .emptyDir | nindent 12 }
             {{ end }}
@@ -29,16 +29,16 @@ spec:
         - name: {{ .name }}
           image: "{{ .image.repository }}:{{ .image.tag }}"
           imagePullPolicy: {{ .imagePullPolicy }}
-          command: [ "sh", "-c", "cp -r /app/staticfiles/* /static-files/" ]
+          command: [ "sh", "-c", "cp -r /app/staticfiles/. /static-files/" ]
           volumeMounts:
-            {{ range .volumeMounts }}
+          {{ range .volumeMounts }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
-            {{ end }}
+          {{ end }}
          {{ end }}
       containers:
         - name: {{ .Values.name }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.port }}
