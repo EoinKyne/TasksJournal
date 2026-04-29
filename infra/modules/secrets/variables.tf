@@ -7,22 +7,23 @@ variable "namespace" {
   type        = string
   default     = "default"
 }
-variable "POSTGRES_DB" {
+variable "postgres_db" {
   description = "The name of the PostgreSQL database"
   type        = string
-  default     = "journal_db"
+  sensitive   = true
 }
-variable "POSTGRES_USER" {
+variable "postgres_user" {
   description = "The username for the PostgreSQL database"
   type        = string
-  default     = "postgres"
+  sensitive   = true
 }
-variable "POSTGRES_PASSWORD" {
+variable "postgres_password" {
   description = "The password for the PostgreSQL database"
   type        = string
-  default     = "postgres"
+  sensitive   = true
 }
-variable "SECRET_KEY" {
+variable "secret_key" {
   description = "A secret key for the application"
   type        = string
+  sensitive   = true
 }
