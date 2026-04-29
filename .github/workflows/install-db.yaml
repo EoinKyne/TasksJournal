@@ -19,7 +19,10 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: terraform init
+        working-directory: ./infra/environments/dev
+        run: |
+          pwd
+          terraform init
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -var-file=infra/environments/dev/terraform.tfvars
+      #- name: Terraform Apply
+      #  run: terraform apply -auto-approve -var-file=infra/environments/dev/terraform.tfvars
