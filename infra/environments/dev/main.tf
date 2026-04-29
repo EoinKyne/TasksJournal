@@ -6,7 +6,7 @@ module "secrets" {
     postgres_db = each.value.postgres_db
     postgres_user = each.value.postgres_user
     postgres_password = each.value.postgres_password
-    secret_key = var.secret_key
+    secret_key = each.value.secret_key
 }
 
 module "journal_app_data" {
