@@ -3,10 +3,10 @@ module "secrets" {
   for_each = var.apps_secrets
     app_name = each.value.app_name
     namespace = each.value.namespace
-    POSTGRES_DB = each.value.POSTGRES_DB
-    POSTGRES_USER = each.value.POSTGRES_USER
-    POSTGRES_PASSWORD = each.value.POSTGRES_PASSWORD
-    SECRET_KEY = each.value.SECRET_KEY
+    POSTGRES_DB = var.postgres_db
+    POSTGRES_USER = var.postgres_user
+    POSTGRES_PASSWORD = var.postgres_password
+    SECRET_KEY = var.secret_key
 }
 
 module "journal_app_data" {
