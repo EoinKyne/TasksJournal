@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
 
@@ -73,7 +74,7 @@ jobs:
       POSTGRES_DB: test_db
       POSTGRES_USER: testuser
       POSTGRES_PASSWORD: testuserpassword
-      #SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     steps:
       - name: Check out the repository
