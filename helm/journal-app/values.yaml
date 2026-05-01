@@ -3,6 +3,12 @@ namespace: default
 
 replicas: 1
 
+appDebug: "0"
+appHostName: simplememo.org
+dbHost: journal-app-data-headless
+dbPort: 5432
+
+
 volumes:
   - name: static-files
     emptyDir: {}
