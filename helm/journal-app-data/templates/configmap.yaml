@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: app-config
-data:
-  DEBUG: "{{ .Values.debug }}"
-  ALLOWED_HOSTS: {{ .Values.host }}
-  DB_HOST: {{ .Values.serviceName }}
-  DB_PORT: "{{ .Values.service.port }}"
