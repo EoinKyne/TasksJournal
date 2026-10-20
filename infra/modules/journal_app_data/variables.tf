@@ -5,7 +5,7 @@ variable "app_name" {
 variable "namespace" {
   description = "The Kubernetes namespace for the application"
   type        = string
-  default = "default"
+  default     = "default"
 }
 variable "image" {
   description = "The container image for the application"
