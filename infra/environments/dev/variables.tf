@@ -31,17 +31,6 @@ variable "secret_key" {
   sensitive   = true
 }
 
-variable "apps_config" {
-  description = "A map of application configurations to deploy as ConfigMaps"
-  type = map(object({
-    app_name      = string
-    namespace     = string
-    DEBUG         = string
-    ALLOWED_HOSTS = string
-    DB_HOST       = string
-    DB_PORT       = string
-  }))
-}
 variable "apps_database" {
   description = "A map of database applications to deploy"
   type = map(object({

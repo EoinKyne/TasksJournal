@@ -9,17 +9,6 @@ module "secrets" {
   secret_key        = var.secret_key
 }
 
-module "config" {
-  source        = "../../modules/config"
-  for_each      = var.apps_config
-  app_name      = each.value.app_name
-  ALLOWED_HOSTS = each.value.ALLOWED_HOSTS
-  DEBUG         = each.value.DEBUG
-  DB_HOST       = each.value.DB_HOST
-  DB_PORT       = each.value.DB_PORT
-  namespace     = each.value.namespace
-}
-
 module "journal_app_data" {
   source            = "../../modules/journal_app_data"
   for_each          = var.apps_database
