@@ -7,7 +7,7 @@ appDebug: "0"
 appHostName: simplememo.org
 dbHost: journal-app-data-headless
 dbPort: 5432
-
+configMapName: app-config
 
 volumes:
   - name: static-files
