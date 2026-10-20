@@ -5,17 +5,6 @@ apps_secrets = {
   }
 }
 
-apps_config = {
-  "app_config" = {
-    "app_name"      = "app-config"
-    "namespace"     = "default"
-    "DEBUG"         = "False"
-    "ALLOWED_HOSTS" = "simplememo.org"
-    "DB_HOST"       = "journal-app-data-headless"
-    "DB_PORT"       = "5432"
-  }
-}
-
 apps_database = {
   "journal_app_data" = {
     "app_name"          = "journal-app-data"
