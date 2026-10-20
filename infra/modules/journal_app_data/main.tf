@@ -1,6 +1,6 @@
 resource "kubernetes_stateful_set_v1" "journal_app_data" {
   metadata {
-    name      = var.app_name
+    name = var.app_name
     labels = {
       app = var.app_name
     }
@@ -8,7 +8,7 @@ resource "kubernetes_stateful_set_v1" "journal_app_data" {
 
   spec {
     service_name = var.service_name
-    replicas = var.replicas
+    replicas     = var.replicas
 
     selector {
       match_labels = {
@@ -25,16 +25,16 @@ resource "kubernetes_stateful_set_v1" "journal_app_data" {
 
       spec {
         container {
-          name  = var.container_name
-          image = var.image
+          name              = var.container_name
+          image             = var.image
           image_pull_policy = var.image_pull_policy
 
           env {
             name = var.db_name_key
             value_from {
               secret_key_ref {
-              name = var.secret_name
-              key = var.db_name_key
+                name = var.secret_name
+                key  = var.db_name_key
               }
             }
           }
@@ -42,8 +42,8 @@ resource "kubernetes_stateful_set_v1" "journal_app_data" {
             name = var.db_user_key
             value_from {
               secret_key_ref {
-              name = var.secret_name
-              key = var.db_user_key
+                name = var.secret_name
+                key  = var.db_user_key
               }
             }
           }
@@ -51,8 +51,8 @@ resource "kubernetes_stateful_set_v1" "journal_app_data" {
             name = var.db_password_key
             value_from {
               secret_key_ref {
-              name = var.secret_name
-              key = var.db_password_key
+                name = var.secret_name
+                key  = var.db_password_key
               }
             }
           }
@@ -62,7 +62,7 @@ resource "kubernetes_stateful_set_v1" "journal_app_data" {
           }
 
           env {
-            name = var.storage_env_name
+            name  = var.storage_env_name
             value = var.storage_env_value
           }
 
@@ -76,7 +76,7 @@ resource "kubernetes_stateful_set_v1" "journal_app_data" {
               command = ["sh", "-c", "pg_isready -h localhost -U var.db_user_key"]
             }
             initial_delay_seconds = var.readiness_probe_initial_delay_seconds
-            period_seconds = var.readiness_probe_period_seconds
+            period_seconds        = var.readiness_probe_period_seconds
           }
         }
       }
@@ -105,7 +105,7 @@ resource "kubernetes_stateful_set_v1" "journal_app_data" {
 
 resource "kubernetes_service_v1" "journal_app_data_headless" {
   metadata {
-    name      = var.service_name
+    name = var.service_name
   }
 
   spec {

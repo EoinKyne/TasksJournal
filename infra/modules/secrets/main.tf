@@ -5,9 +5,9 @@ resource "kubernetes_secret_v1" "app_secrets" {
   }
 
   data = {
-    POSTGRES_DB = var.postgres_db
-    POSTGRES_USER = var.postgres_user
+    POSTGRES_DB       = var.postgres_db
+    POSTGRES_USER     = var.postgres_user
     POSTGRES_PASSWORD = var.postgres_password
-    SECRET_KEY = var.secret_key
+    SECRET_KEY        = var.secret_key
   }
 }
